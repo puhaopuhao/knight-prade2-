@@ -18,7 +18,7 @@ const ParamDict = { //IMPROVE: use method
       move: ["move01", "move02", "move03", "move04", "move05", "move01"],
     },
     frameRate: 6.6,
-    speed: 11.5  //px per update //IMPROVE
+    speed: 11.5 //px per update //IMPROVE
   },
   swordman: {
     atlasImgSrc: "images/" + textureSet.swordman.imgFile,
@@ -33,7 +33,7 @@ const ParamDict = { //IMPROVE: use method
 }
 
 export default class Character {
-  constructor(ctx, name) {
+  constructor(ctx, name, obje) {
     var param = ParamDict[name]
     this.ctx = ctx
 
@@ -51,7 +51,7 @@ export default class Character {
     this.init()
   }
 
-  init(){
+  init() {
     // 玩家默认处于屏幕底部居中位置
     this.x = canvas.width / 2 - this.width / 2
     this.y = canvas.height / 2 - this.height / 2
@@ -65,7 +65,7 @@ export default class Character {
     //this.startY = 0
 
     this.currStep = 0
-    this.moveStepsX = []  //下一步的相对位移
+    this.moveStepsX = [] //下一步的相对位移
     this.moveStepsY = []
 
     if (this.currAnim)
@@ -74,17 +74,16 @@ export default class Character {
     this.currAnim.start()
   }
 
-  changeStatusAndAnim(status){
-  if (this.status == status)
+  changeStatusAndAnim(status) {
+    if (this.status == status)
       return
 
-    if (this.status == Status_Stand && status == Status_Move){
+    if (this.status == Status_Stand && status == Status_Move) {
       this.status = status
       this.currAnim.finish()
       this.currAnim = this.anim[this.status]
       this.currAnim.start()
-    }
-    else if (this.status == Status_Move && status == Status_Stand) {
+    } else if (this.status == Status_Move && status == Status_Stand) {
       this.status = status
       this.currAnim.finish()
       this.currAnim = this.anim[this.status]
@@ -113,7 +112,8 @@ export default class Character {
     let moveStepX = ((destX - this.x > 0) ? 1 : -1) * moveDistanceX / moveSteps;
     let moveStepY = ((destY - this.y > 0) ? 1 : -1) * moveDistanceY / moveSteps;
     let i = 0
-    let moveStepsX = [], moveStepsY = []
+    let moveStepsX = [],
+      moveStepsY = []
     for (i = 0; i < moveSteps; i++) {
       //NOTE: use array for future extension(e.g. path-finding). currently every step is equal.
       moveStepsX[i] = moveStepX;
@@ -121,10 +121,9 @@ export default class Character {
     }
 
     //2.改变状态&动画、移动相关坐标&步进[]
-    if (moveSteps == 0){
+    if (moveSteps == 0) {
       this.changeStatusAndAnim(Status_Stand)
-    }
-    else{
+    } else {
       this.changeStatusAndAnim(Status_Move)
       this.destX = destX
       this.destY = destY
@@ -160,29 +159,28 @@ export default class Character {
       return (radian == 0) ? 2 : ((radian == 1) ? 1 : 0);
     }
   }
-   //Randomly change direction during Stand status.
-  calcRandomDirection(){
+  //Randomly change direction during Stand status.
+  calcRandomDirection() {
     let MAX_RAND = 10
     let randNum = Math.random() * MAX_RAND + 0
     //console.log("randNum: " + randNum)
-    if (this.switchDirection && this.currAnim != null ) {
-        if (Math.random() > 0.5) {
-          if (++this.currDirection > Direction_NW) 
-            this.currDirection = Direction_North;
-        }
-        else {
-          if (--this.currDirection < Direction_North) 
-            this.currDirection = Direction_NW;
-        }
-        this.switchDirection = false;
+    if (this.switchDirection && this.currAnim != null) {
+      if (Math.random() > 0.5) {
+        if (++this.currDirection > Direction_NW)
+          this.currDirection = Direction_North;
+      } else {
+        if (--this.currDirection < Direction_North)
+          this.currDirection = Direction_NW;
+      }
+      this.switchDirection = false;
     } else if (!this.switchDirection && (randNum < MAX_RAND * 0.1)) {
-        this.switchDirection = true;
+      this.switchDirection = true;
     }
   }
 
   //IMPROVE 有效区域判断
   isInArea(testx, testy) {
-    if (testx < 0 || testx > 680 || testy < 60 || testy > 320) {  //IMPRVE
+    if (testx < 0 || testx > 680 || testy < 60 || testy > 320) { //IMPRVE
       return false
     }
 
@@ -202,37 +200,40 @@ export default class Character {
 
   update(timeElapsed) {
     //1.状态、坐标变更
-    if(this.status == Status_Move){
+    if (this.status == Status_Move) {
       if (this.currStep == 0) {
         this.currDirection = this.getDirection(this.x, this.y, this.destX, this.destY);
         //console.log("")
       }
       //IMPROVE: 补边界判断：isInArea
-      
+
       let nextX = Math.floor(this.x + this.moveStepsX[this.currStep]);
       let nextY = Math.floor(this.y + this.moveStepsY[this.currStep]);
       if (!this.isInArea(nextX, nextY)) {
         this.stand()
-      }
-      else{
+      } else {
         this.x = nextX
         this.y = nextY
         this.currStep++;
         if (this.currStep == this.moveStepsX.length)
           this.stand();
       }
-    }
-    else if (this.status == Status_Stand && this.currAnim.isFinished()) {
+    } else if (this.status == Status_Stand && this.currAnim.isFinished()) {
       this.calcRandomDirection();
     }
     if (this.currAnim.isFinished())
       this.currAnim.start()
-    
+
     //2.动画帧更新
     this.currAnim.update(timeElapsed)
   }
 
-  render(){
+  render() {
     this.currAnim.render(this.ctx, this.x, this.y, this.currDirection)
+  }
+
+  getCurrStatus(character) {
+
+    //return
   }
 }

@@ -43,7 +43,7 @@ export default class Main {
     )
 
     this.bindloopRender = this.loopRender.bind(this)
-    if (this.renderLoopId !=0)
+    if (this.renderLoopId != 0)
       // 清除上一局的动画
       window.cancelAnimationFrame(this.renderLoopId);
     this.renderLoopId = window.requestAnimationFrame(
@@ -64,7 +64,17 @@ export default class Main {
       let y = e.touches[0].clientY
 
       if (x < 110 && y < 75) { //回避角色选择Panel //IMPROVE
-        
+        let name = ""
+        if (x > 10 && x < 55 && y > 3.3 && y < 63.3) {
+          name = "paladin"
+        } else if (x > 70 && x < 106 && y > 15 && y < 63){
+          name = "swordman"
+        }
+        let currX = this.character.x
+        let currY = this.character.y
+        this.character = new Character(ctx, name, this.character)
+        this.character.x = currX
+        this.character.y = currY
         return
       } else {
         this.startX = this.x

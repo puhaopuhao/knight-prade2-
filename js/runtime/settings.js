@@ -57,8 +57,8 @@ export default class Settings {
       PALADIN_HEIGHT,
       10,
       30 - PALADIN_HEIGHT/3,  //3.3
-      PALADIN_WIDTH / 2 * 1.5,
-      PALADIN_HEIGHT / 2 * 1.5
+      PALADIN_WIDTH / 2 * 1.5,  //45
+      PALADIN_HEIGHT / 2 * 1.5  //60
     )
 
     this.ctx.drawImage(
@@ -69,8 +69,8 @@ export default class Settings {
       SWORDMAN_HEIGHT,
       10 + PALADIN_WIDTH / 1.5 * 1.5,  //70
       15,
-      SWORDMAN_WIDTH / 1.5 * 1.5,
-      SWORDMAN_HEIGHT / 1.5 * 1.5
+      SWORDMAN_WIDTH / 1.5 * 1.5,  //36
+      SWORDMAN_HEIGHT / 1.5 * 1.5  //48
     )
 
   }
